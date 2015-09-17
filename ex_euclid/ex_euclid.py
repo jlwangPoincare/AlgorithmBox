@@ -1,9 +1,9 @@
 def ex_euclid(a1, b1):
-"""
-A function used to implement the extended Euclidean algorithm.
-Input two positive integers, a1 and b1. Same as gcd(), do not
-need to be in order. Program will check input types.
-"""
+    """
+    A function used to implement the extended Euclidean algorithm.
+    Input two positive integers, a1 and b1. Same as gcd(), do not
+    need to be in order. Program will check input types.
+    """
     if not isinstance(a1, int):
         print 'Noninteger input a'
         return None
@@ -15,7 +15,7 @@ need to be in order. Program will check input types.
         return None
 
     # Key part
-    r1, q1 = divmod(a1, b1) # Tuple-returning function
+    q1, r1 = divmod(a1, b1) # Tuple-returning function
     if r1 == 0:
         # Returned value are X1, Y1 and g that satisfy a1*X1 + b1*Y1 = g, and g is gcd
         return (0, 1, b1) # X1 = 0, Y1 = 1, g = b1, since a1 % b1 = 0, b1 = g
