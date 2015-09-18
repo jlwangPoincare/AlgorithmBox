@@ -1,4 +1,4 @@
-# This file can be used as a package to be imported
+# This file can be used as a module to be imported
 # Type "import ex_euclid"
 def gcd(a, b):
     """
