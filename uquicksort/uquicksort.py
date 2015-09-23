@@ -6,6 +6,7 @@ def uqsort(given_list, reverse = False):
     #I think Python has list.sort() method as quick sort. Whatever, I
     #need to write it myself.
     if len(given_list) <= 1:
+        # Base case
         return given_list
     if reverse:
         pass
@@ -14,11 +15,15 @@ def uqsort(given_list, reverse = False):
     iter2 = len(given_list) - 1
     pivot_buffer = 0
     while iter1 < iter2:
+        while ...
+        while ...
         if given_list[iter2] < given_list[iter1]:
             given_list[iter1] = given_list[iter2]
             pivot_buffer = iter2
             iter1 += 1
         elif 
+        uqsort(given_list[:pivot_buffer])
+        uqsort(given_list[pivot_buffer + 1:])
     #Something like this...
 
 
