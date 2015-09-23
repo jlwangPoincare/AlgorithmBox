@@ -5,6 +5,8 @@ def uqsort(given_list, reverse = False):
     """
     #I think Python has list.sort() method as quick sort. Whatever, I
     #need to write it myself.
+    if len(given_list) <= 1:
+        return given_list
     if reverse:
         pass
     pivot_value = given_list[0]
