@@ -1,9 +1,9 @@
 AlgorithmBox
 ============================================================
     
-    Store some of my implementation of good algorithms here.
+Store some of my implementation of good algorithms here.
 
-Categories:
+Categories
 ------------------------------------------------------------
 
 ### ex_euclid: An implementation of extended Euclidean algorithm
@@ -13,4 +13,6 @@ Categories:
     ex_euclid.m_inverse() A function calculates the modulous inverse of a number e with modulous n
 
 ### uquicksort: An implementation of quick sort algorithm
-
+    uquicksort.py A module containing quick sort function
+    uquicksort.basic_quicksort() A function taking a list as argument, returning the sorted list
+    uquicksort.uqsort() A function taking a list as argument, returning the sorted list, with option of ascending or descending
