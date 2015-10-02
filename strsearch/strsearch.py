@@ -25,9 +25,22 @@ def plain(instring, pattern):
         return -1
     # In this program, for-else statements are useful
 
-t1 = time.clock()
-print plain('abcabdabeabf' * 4 + 'abcabc', 'abcabc')
-print 'T1 = ', time.clock() - t1
+#t1 = time.clock()
+#print plain('abcabdabeabf' * 4 + 'abcabc', 'abcabc')
+#print 'T1 = ', time.clock() - t1
+
+def rep_process(a_string):
+    """
+    A function returning the characterized list of a pattern string.
+    Trying to find the repetitive occurence of the prefix string.
+    """
+    # This is a test case
+    return [0, 0, 0, 0, 1, 2, 0]
+    #process_result = list()
+    #i = 1
+    #j = len(a_string) - 1
+    #while i < len(a_string) - 1:
+        #if a_string[:i] == a_string[j:]:
 
 def kmp_search(instring, pattern):
     """
@@ -35,7 +48,7 @@ def kmp_search(instring, pattern):
     the pattern string, return the index for the first time found.
     Use KMP algorithm, faster than plain.
     """
-    pattern_temp_list = rep_process(pattern)
+    partial_match_table = rep_process(pattern)
     length_instring = len(instring)
     length_pattern = len(pattern)
     i = 0
@@ -48,6 +61,8 @@ def kmp_search(instring, pattern):
             # i stays at the same position all the way, moves j only
             if instring[i + j] != pattern[j]:
                 # modify i, j according to pattern_temp_list
+                i += j - partial_match_table[j-1]
+                j = partial_match_table[j-1]
                 break
             j += 1
         else:
@@ -59,17 +74,8 @@ def kmp_search(instring, pattern):
     else:
         # The outer loop ends normally, pattern not found
         return -1
+    # This works
 
-    pass
+print kmp_search('BBC ABCDAB ABCDABCDABDE', 'ABCDABD')
 
-def rep_process(a_string):
-    """
-    A function returning the characterized list of a pattern string.
-    Trying to find the repetitive occurence of the prefix string.
-    """
-    process_result = list()
-    #i = 1
-    #j = len(a_string) - 1
-    #while i < len(a_string) - 1:
-        #if a_string[:i] == a_string[j:]:
 
