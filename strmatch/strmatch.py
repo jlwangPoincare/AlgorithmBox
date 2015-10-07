@@ -29,18 +29,25 @@ def plain(instring, pattern):
 #print plain('abcabdabeabf' * 4 + 'abcabc', 'abcabc')
 #print 'T1 = ', time.clock() - t1
 
-def rep_process(a_string):
+def pre_process(a_string):
     """
     A function returning the characterized list of a pattern string.
     Trying to find the repetitive occurence of the prefix string.
     """
     # This is a test case
-    return [0, 0, 0, 0, 1, 2, 0]
-    #process_result = list()
-    #i = 1
-    #j = len(a_string) - 1
-    #while i < len(a_string) - 1:
-        #if a_string[:i] == a_string[j:]:
+    #return [0, 0, 0, 0, 1, 2, 0]
+    process_result = list()
+    process_result.append(0);
+    i = 2
+    while i <= len(a_string):
+        j = i - 1
+        while j > 0:
+            if a_string[:j] == a_string[i - j:i]:
+                break
+            j -= 1
+        process_result.append(j)
+        i += 1
+    return process_result
 
 def kmp_search(instring, pattern):
     """
@@ -48,7 +55,7 @@ def kmp_search(instring, pattern):
     the pattern string, return the index for the first time found.
     Use KMP algorithm, faster than plain.
     """
-    partial_match_table = rep_process(pattern)
+    partial_match_table = pre_process(pattern)
     length_instring = len(instring)
     length_pattern = len(pattern)
     i = 0
@@ -60,22 +67,24 @@ def kmp_search(instring, pattern):
             # j starts from 0, if pattern[0] is not matched, break
             # i stays at the same position all the way, moves j only
             if instring[i + j] != pattern[j]:
+                pass
                 # modify i, j according to pattern_temp_list
-                i += j - partial_match_table[j-1]
-                j = partial_match_table[j-1]
-                break
+                #i += j - partial_match_table[j-1] + 1
+                #j = partial_match_table[j-1]
+                #break
             j += 1
         else:
             # The loop ends normally, no break, which means the whole pattern is found
             return i
             # instring[i] == pattern[0], so return i
         # no need to add a break statement here
-        i += 1
+        #i += 1
     else:
         # The outer loop ends normally, pattern not found
         return -1
-    # This works
+    # This is a mess
 
-print kmp_search('BBC ABCDAB ABCDABCDABDE', 'ABCDABD')
+#print kmp_search('A ABCDAB ABCDABCDABDE', 'ABCDABD')
+print pre_process('ABCDABD')
 
 
