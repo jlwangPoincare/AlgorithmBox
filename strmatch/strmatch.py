@@ -34,8 +34,7 @@ def pre_process(a_string):
     A function returning the characterized list of a pattern string.
     Trying to find the repetitive occurence of the prefix string.
     """
-    # This is a test case
-    #return [0, 0, 0, 0, 1, 2, 0]
+    # In this version, pre_process is not the best
     process_result = list()
     process_result.append(0);
     i = 2
@@ -55,36 +54,35 @@ def kmp_search(instring, pattern):
     the pattern string, return the index for the first time found.
     Use KMP algorithm, faster than plain.
     """
-    partial_match_table = pre_process(pattern)
+    next_table = pre_process(pattern)
     length_instring = len(instring)
     length_pattern = len(pattern)
     i = 0
+    #i points to the character to be matched in instring
     j = 0
-    while i < length_instring - length_pattern + 1:
-        # search from instring[0] to instring[-length_pattern] for the pattern[0]
-        # but i and j can be changed in the loop
-        while j < length_pattern:
-            # j starts from 0, if pattern[0] is not matched, break
-            # i stays at the same position all the way, moves j only
-            if instring[i + j] != pattern[j]:
-                pass
-                # modify i, j according to pattern_temp_list
-                #i += j - partial_match_table[j-1] + 1
-                #j = partial_match_table[j-1]
-                #break
+    #j points to the character to be matched in pattern
+    while i < length_instring:
+        while j > 0 and instring[i] != pattern[j]:
+            # This while deal with when part of pattern is matched and j not matched
+            # Only in this case, i don't move
+            # move j to a matched position in the previous part or move j to 0
+            j = next_table[j - 1]
+            # next_table[j-1] stores the position where pattern string can
+            # match itself
+        if instring[i] == pattern[j]:
+            # This if distinguishs j == 0 from i j matched
+            # Whatever, i will move. j will move if matched
             j += 1
-        else:
-            # The loop ends normally, no break, which means the whole pattern is found
-            return i
-            # instring[i] == pattern[0], so return i
-        # no need to add a break statement here
-        #i += 1
-    else:
-        # The outer loop ends normally, pattern not found
-        return -1
-    # This is a mess
+        if j == length_pattern:
+            # If after j move, j at the end of pattern, means whole pattern matched
+            return i - j + 1
+            # Calculate the index of the first match position
+        i += 1
+    return -1
+    # If the loop ends, no match found
+    # End while
 
-#print kmp_search('A ABCDAB ABCDABCDABDE', 'ABCDABD')
 print pre_process('ABCDABD')
+print kmp_search('A ABCDAB ABCDABCDABDE', 'ABCDABD')
 
 
