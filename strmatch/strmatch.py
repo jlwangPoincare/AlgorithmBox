@@ -25,28 +25,58 @@ def plain(instring, pattern):
         return -1
     # In this program, for-else statements are useful
 
+# In plain match algorithm, every time the position where the pattern match start in
+# the instring increse by 1. As the index in patter, the index in instring may go
+# back, thus it's not very convenient to use i to indicate the character to be
+# compared in instring.
+
 #t1 = time.clock()
 #print plain('abcabdabeabf' * 4 + 'abcabc', 'abcabc')
 #print 'T1 = ', time.clock() - t1
 
-def pre_process(a_string):
+def pre_process(pattern):
     """
     A function returning the characterized list of a pattern string.
     Trying to find the repetitive occurence of the prefix string.
     """
+    # In the 'next' array, nxt_table[j] is the index j should go to
+    # when instring[i] != pattern[j]
+    length_pattern = len(pattern)
+    nxt_table = list()
+    nxt_table.append(-1)
+    j = 0
+    # j points to the position in the pattern string
+    k = -1
+    # k points to the position in a substring
+    while j < length_pattern - 1:
+        if k == -1 or pattern[j] == pattern[k]:
+            k += 1
+            j += 1
+            l = k
+            if l != -1 and pattern[j] == pattern[l]:
+                l = nxt_table[l]
+            nxt_table.append(l)
+            # nxt_table[j] = l (nxt_table[j] is nxt_table[j+1] previously to j += 1)
+        else:
+            k = nxt_table[k]
+    return nxt_table
+
+    # Initialize the 0th element in nxt as -1
+
     # In this version, pre_process is not the best
-    process_result = list()
-    process_result.append(0);
-    i = 2
-    while i <= len(a_string):
-        j = i - 1
-        while j > 0:
-            if a_string[:j] == a_string[i - j:i]:
-                break
-            j -= 1
-        process_result.append(j)
-        i += 1
-    return process_result
+    #process_result = list()
+    #process_result.append(0);
+    #i = 2
+    #while i <= len(pattern):
+        #j = i - 1
+        #while j > 0:
+            #if pattern[:j] == pattern[i - j:i]:
+                #break
+            #j -= 1
+        #process_result.append(j)
+        #i += 1
+    #print process_result
+    #return process_result
 
 def kmp_search(instring, pattern):
     """
@@ -54,7 +84,7 @@ def kmp_search(instring, pattern):
     the pattern string, return the index for the first time found.
     Use KMP algorithm, faster than plain.
     """
-    next_table = pre_process(pattern)
+    nxt = pre_process(pattern)
     length_instring = len(instring)
     length_pattern = len(pattern)
     i = 0
@@ -62,27 +92,20 @@ def kmp_search(instring, pattern):
     j = 0
     #j points to the character to be matched in pattern
     while i < length_instring:
-        while j > 0 and instring[i] != pattern[j]:
-            # This while deal with when part of pattern is matched and j not matched
-            # Only in this case, i don't move
-            # move j to a matched position in the previous part or move j to 0
-            j = next_table[j - 1]
-            # next_table[j-1] stores the position where pattern string can
-            # match itself
-        if instring[i] == pattern[j]:
-            # This if distinguishs j == 0 from i j matched
-            # Whatever, i will move. j will move if matched
+        if j == -1 or instring[i] == pattern[j]:
+            i += 1
             j += 1
-        if j == length_pattern:
-            # If after j move, j at the end of pattern, means whole pattern matched
-            return i - j + 1
-            # Calculate the index of the first match position
-        i += 1
+            if j == length_pattern:
+                return i - j + 1
+        else:
+            j = nxt[j]
     return -1
-    # If the loop ends, no match found
     # End while
 
-print pre_process('ABCDABD')
-print kmp_search('A ABCDAB ABCDABCDABDE', 'ABCDABD')
+# In KMP algorithm, the index in instring can never decrease. Thus it is
+# convenient to use i to indicate the character to compare in instring.
+
+#print pre_process('ABACABABA')
+#print kmp_search('A ABCDAB ABCDABCDABDE', 'ABCDABD')
 
 
