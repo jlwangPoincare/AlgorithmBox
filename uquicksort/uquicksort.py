@@ -1,5 +1,5 @@
-import random
-import time
+# This file can be used as a module to be imported
+# Type "import uquicksort"
 
 def basic_quicksort(given_list):
     """
@@ -64,6 +64,12 @@ def uqsort(given_list, reverse = False):
     return basic_quicksort(given_list)
 
 if __name__ == '__main__':
+    # Put your code as the main function here
+    # Won't be executed when used as imported package
+
+    import random
+    import time
+
     print 'Generate a random list with 10 million random integers'
     t0 = time.clock()
     random_list = []

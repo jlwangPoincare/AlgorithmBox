@@ -1,5 +1,6 @@
 # This file can be used as a module to be imported
 # Type "import ex_euclid"
+
 def gcd(a, b):
     """
     A function used to evaluate the greatest common divisor.
@@ -78,3 +79,7 @@ def m_inverse(element, modulous):
         return None
     return temp_d
     # Key part end
+
+if __name__ = '__main__':
+    # Put your code as the main function here
+    # Won't be executed when used as imported package
