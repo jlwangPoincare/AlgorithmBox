@@ -74,6 +74,9 @@ def m_inverse(element, modulous):
 
     # Key part
     (temp1, temp_d, temp3) = ex_euclid(modulous, element)
+    if not (temp_d >= 0 and temp_d < modulous):
+        temp_d -= temp_d / abs(temp_d) * modulous
+    # Make sure returned d is between 0 and modulous - 1. temp_d / abs(temp_d) is a sign
     if temp_d * element % modulous != 1:
         print 'd failed'
         return None
