@@ -33,18 +33,16 @@ def find_witness(n):
     print 'd = ', d, 's = ', s
     for a in range(2, n-2):
         temp = fast_int_mod_power(a, d, n)
+        print a, '**', d, '=', temp, 'mod', n
         if temp == 1:
             # pass this a
             continue
         for r in range(s):
             temp = fast_int_mod_power(a, 2 ** r * d, n)
+            print a, '** (', d, '* 2 **', r, ') =', temp, 'mod', n
             if temp == n-1:
                 # Found, also pass this a
                 break
-                #print a, 'is a witness of', n
-                #print a, '** (', d, '* 2 **', r, ') != -1 mod', n
-                #print a, '** (', d, '* 2 **', r, ') =', temp, 'mod', n
-                #return a
         else:
             # End of for loop, not found any r s.t. a ** ( d * 2 ** r ) == n - 1
             print a, 'is a witness of', n
@@ -54,11 +52,34 @@ def find_witness(n):
             return a
         # break will jump here, continue this loop for next a
 
-    print 'Witness not found'
+    #print 'Witness not found'
     return -1
 
+def prime_test(n):
+    if n < 2:
+        return None
+    if n == 2:
+        return True
+    if n > 2 and n % 2 == 0:
+        return False
+    w = find_witness(n)
+    if w > 0:
+        print n, 'is not a prime number, with at least a witness:', w
+        return False
+    else:
+        print n, 'is a prime number'
+        return True
 
-find_witness(9937)
-find_witness(5619)
-find_witness(65537)
-print fast_int_mod_power(2, 2808, 5619)
+if __name__ == '__main__':
+    
+    while True:
+        inp = int(raw_input('Please type in a number you want to test\n'))
+        if inp != 0: 
+            print prime_test(inp)
+        else:
+            break
+
+    #find_witness(9937)
+    #find_witness(5619)
+    #find_witness(65537)
+    #print fast_int_mod_power(2, 2808, 5619)
