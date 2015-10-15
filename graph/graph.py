@@ -6,7 +6,7 @@ class Graph(object):
 
     def __init__(self, edge = list(), vertex_num = 0):
         self.vertex = range(1, vertex_num + 1)
-        self.edge = edge
+        self.edge = edge[:]
         return
 
     def __str__(self):
@@ -14,5 +14,18 @@ class Graph(object):
         se = self.edge.__str__()
         return "Vertices: %s\nEdges: %s" % (sv, se)
 
-mygraph = Graph([], 3)
+    def add_vertex(self, num):
+        if num in self.vertex:
+            print 'This vertex already exist'
+            return
+        self.vertex.append(num)
+        return
+
+mygraph = Graph([(1, 2), (2, 3), (1, 3)], 3)
+print mygraph
+
+mygraph.add_vertex(3)
+print mygraph
+
+mygraph.add_vertex(4)
 print mygraph

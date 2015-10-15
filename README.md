@@ -16,3 +16,9 @@ Categories
     uquicksort.py A module containing quick sort function
     uquicksort.basic_quicksort() A function taking a list as argument, returning the sorted list
     uquicksort.uqsort() A function taking a list as argument, returning the sorted list, with option of ascending or descending
+
+### strmatch
+
+### prime_test
+
+### graph
