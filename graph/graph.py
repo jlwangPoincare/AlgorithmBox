@@ -35,6 +35,19 @@ class Graph(object):
         print 'This edge does not exist'
         return
 
+    def delete_vertex(self, num_v):
+        new_edge = []
+        if num_v in self.vertex:
+            self.vertex.remove(num_v)
+            for an_edge in self.edge:
+                if num_v not in an_edge:
+                    new_edge.append(an_edge)
+            self.edge = new_edge
+            return
+        print 'This vertex does not exist'
+        return
+
+
 
 mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 print mygraph
@@ -49,4 +62,7 @@ mygraph.add_edge((3, 4))
 print mygraph
 
 mygraph.delete_edge((2, 3))
+print mygraph
+
+mygraph.delete_vertex(1)
 print mygraph
