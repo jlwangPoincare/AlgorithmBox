@@ -2,47 +2,57 @@
 # Need first construct a class to represent a graph
 
 class Graph(object):
-    """Necessary data and methods of a graph object."""
+    """
+    Necessary data and methods of a graph object.
+    A Graph object has attributes:
+    Vertex: a list of names of vertices
+    Edge: a list of tuples storing edge data
+    """
 
     def __init__(self, vertex_num = 0, edge = list()):
-        self.vertex = range(1, vertex_num + 1)
-        self.edge = edge[:]
+        """vertex_num is the number of vertices, assuming
+        user don't really care the names of the vertices.
+        edge is a list of tuples. For undirected graph, use
+        2-component tuples for convinience."""
+        self.Vertex = range(1, vertex_num + 1)
+        self.Edge = edge[:]
         return
 
     def __str__(self):
-        sv = self.vertex.__str__()
-        se = self.edge.__str__()
+        sv = self.Vertex.__str__()
+        se = self.Edge.__str__()
         return "Vertices: %s\nEdges: %s" % (sv, se)
 
     def add_vertex(self, num):
-        if num in self.vertex:
+        if num in self.Vertex:
             print 'This vertex already exist'
             return
-        self.vertex.append(num)
+        self.Vertex.append(num)
         return
 
     def add_edge(self, edge_tuple):
-        if edge_tuple in self.edge:
+        if edge_tuple in self.Edge:
             print 'This edge already exist'
             return
-        self.edge.append(edge_tuple)
+        self.Edge.append(edge_tuple)
         return
 
     def delete_edge(self, edge_tuple):
-        if edge_tuple in self.edge:
-            self.edge.remove(edge_tuple)
+        if edge_tuple in self.Edge:
+            self.Edge.remove(edge_tuple)
             return
         print 'This edge does not exist'
         return
 
     def delete_vertex(self, num_v):
         new_edge = []
-        if num_v in self.vertex:
-            self.vertex.remove(num_v)
-            for an_edge in self.edge:
+        if num_v in self.Vertex:
+            self.Vertex.remove(num_v)
+            for an_edge in self.Edge:
                 if num_v not in an_edge:
                     new_edge.append(an_edge)
-            self.edge = new_edge
+            del self.Edge
+            self.Edge = new_edge
             return
         print 'This vertex does not exist'
         return
