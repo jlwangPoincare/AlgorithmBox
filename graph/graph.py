@@ -7,21 +7,36 @@ class Graph(object):
     A Graph object has attributes:
     Vertex: a list of names of vertices
     Edge: a list of tuples storing edge data
+    Directed: True for directed graph, False for undirected
     """
 
-    def __init__(self, vertex_num = 0, edge = list()):
-        """vertex_num is the number of vertices, assuming
+    def __init__(self, vertex = 0, edge = list()):
+        """vertex can be the number of vertices, assuming
         user don't really care the names of the vertices.
+        Also vertex can be a list of vertex names.
         edge is a list of tuples. For undirected graph, use
         2-component tuples for convinience."""
-        self.Vertex = range(1, vertex_num + 1)
+        if isinstance(vertex, int):
+            self.Vertex = range(1, vertex + 1)
+        elif isinstance(vertex, list):
+            self.Vertex = vertex[:]
+        edge_type = len(edge[0])
+        for each_edge in edge:
+            if len(each_edge) != edge_type:
+                print 'Wrong edge format!'
+                return
+        if edge_type == 3:
+            self.Directed = True
+        elif edge_type == 2:
+            self.Directed = False
+        else:
+            print 'Wrong edge format!'
+            return
         self.Edge = edge[:]
         return
 
     def __str__(self):
-        sv = self.Vertex.__str__()
-        se = self.Edge.__str__()
-        return "Vertices: %s\nEdges: %s" % (sv, se)
+        return "Vertices: %s\nEdges: %s" % (self.Vertex.__str__(), self.Edge.__str__())
 
     def add_vertex(self, num):
         if num in self.Vertex:
@@ -61,18 +76,22 @@ class Graph(object):
 
 mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 print mygraph
-
-mygraph.add_vertex(3)
+mygraph = Graph(3, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (1, 3, 3)])
+print mygraph
+mygraph = Graph([1, 2, 3, 5], [(1, 2), (2, 3), (1, 3)])
 print mygraph
 
-mygraph.add_vertex(4)
-print mygraph
+#mygraph.add_vertex(3)
+#print mygraph
 
-mygraph.add_edge((3, 4))
-print mygraph
+#mygraph.add_vertex(4)
+#print mygraph
 
-mygraph.delete_edge((2, 3))
-print mygraph
+#mygraph.add_edge((3, 4))
+#print mygraph
 
-mygraph.delete_vertex(1)
-print mygraph
+#mygraph.delete_edge((2, 3))
+#print mygraph
+
+#mygraph.delete_vertex(1)
+#print mygraph
