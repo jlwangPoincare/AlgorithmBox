@@ -106,7 +106,7 @@ class Graph(object):
                 if edge_tuple in self.Edge:
                     print 'This edge already exist: unweighted and directed'
                     return
-        if edge_tuple[0] in self.Vertex and edge_tuple[1] in self.Vertex:
+        if (edge_tuple[0] in self.Vertex) and (edge_tuple[1] in self.Vertex):
             self.Edge.append(edge_tuple)
         else:
             print 'Wrong adding edge format: nonexisting vertex!'
@@ -116,23 +116,37 @@ class Graph(object):
     def delete_edge(self, edge_tuple):
         """edge_tuple should be a 2-component tuple"""
         if self.Weighted:
-            pass
+            if edge_tuple in self.Edge:
+                ind = self.Edge.index(edge_tuple)
+                del self.Weight[ind]
+                del self.Edge[ind]
+                return
+            elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
+                ind = self.Edge.index((edge_tuple[1], edge_tuple[0]))
+                del self.Weight[ind]
+                del self.Edge[ind]
+                return
+            else:
+                print 'Edge not found: weighted'
+                return
         else:
             if edge_tuple in self.Edge:
                 self.Edge.remove(edge_tuple)
                 return
-            print 'This edge does not exist'
-            return
+            elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
+                self.Edge.remove((edge_tuple[1], edge_tuple[0]))
+                return
+            else:
+                print 'Edge not found: unweighted'
+                return
 
     def delete_vertex(self, num_v):
-        new_edge = []
         if num_v in self.Vertex:
+            selfedgecopy = self.Edge[:]
             self.Vertex.remove(num_v)
-            for an_edge in self.Edge:
-                if num_v != an_edge[0] and num_v != an_edge[1]:
-                    new_edge.append(an_edge)
-            del self.Edge
-            self.Edge = new_edge
+            for an_edge in selfedgecopy:
+                if num_v == an_edge[0] or num_v == an_edge[1]:
+                    self.delete_edge(an_edge)
             return
         print 'This vertex does not exist'
         return
@@ -178,6 +192,14 @@ class Graph(object):
 
     def is_connected(self):
         num_vertex = len(self.Vertex)
+        if self.Directed:
+            test = True
+            for ind in range(num_vertex):
+                BFS_tree = self.BFS(self.Vertex[ind])
+                test = test and len(BFS_tree) == num_vertex
+                if not test:
+                    return test
+            return test
         BFS_tree = self.BFS(self.Vertex[0])
         return len(BFS_tree) == num_vertex
 
@@ -190,13 +212,13 @@ class Graph(object):
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 #print mygraph
-#mygraph = Graph(3, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (1, 3, 3)])
+mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
+print mygraph
+#mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
 #print mygraph
-mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
-print mygraph
-mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
-print mygraph
-print mygraph.BFS(13)
+#mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
+#print mygraph
+print mygraph.BFS(5)
 print mygraph.is_connected()
 
 #mygraph.add_vertex(3)
