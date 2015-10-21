@@ -7,6 +7,7 @@ class Graph(object):
     A Graph object has attributes:
     Vertex: a list of names of vertices
     Edge: a list of tuples storing edge data
+    Weight: a list corresponding to each edge's weight
     Directed: True for directed graph, False for undirected
     Weighted: True for weighted graph, False for unweighted
     """
@@ -17,6 +18,7 @@ class Graph(object):
         Also vertex can be a list of vertex names.
         edge is a list of tuples. For undirected graph, use
         2-component tuples for convinience."""
+        # Do vertex
         if isinstance(vertex, int) and vertex > 0:
             self.Vertex = range(1, vertex + 1)
         elif isinstance(vertex, list):
@@ -26,6 +28,13 @@ class Graph(object):
         else:
             print 'Wrong vertex format!'
             return
+        # Do directed
+        if isinstance(directed, bool):
+            self.Directed = directed
+        else:
+            print 'Wrong directed format!'
+            return
+        # Do edge
         if isinstance(edge, list):
             edge_type = len(edge[0])
             for each_edge in edge:
@@ -34,6 +43,7 @@ class Graph(object):
                     return
             if edge_type == 3:
                 self.Weighted = True
+                self.Weight = []
             elif edge_type == 2:
                 self.Weighted = False
             else:
@@ -45,14 +55,11 @@ class Graph(object):
         else:
             print 'Wrong edge format: list!'
             return
-        if isinstance(directed, bool):
-            self.Directed = directed
-        else:
-            print 'Wrong directed format!'
-            return
         return
 
     def __str__(self):
+        if self.Weighted:
+            return "Vertices: %s\nEdges: %s\nWeights: %s" % (self.Vertex.__str__(), self.Edge.__str__(), self.Weight.__str__())
         return "Vertices: %s\nEdges: %s" % (self.Vertex.__str__(), self.Edge.__str__())
 
     def add_vertex(self, num):
@@ -69,9 +76,36 @@ class Graph(object):
         if not isinstance(edge_tuple, tuple):
             print 'Wrong adding edge format: not tuple!'
             return
-        if edge_tuple in self.Edge:
-            print 'This edge already exist'
+        if edge_tuple[0] == edge_tuple[1]:
+            print 'No loop in simple graph'
             return
+        if self.Weighted:
+            if len(edge_tuple) != 3:
+                print 'Wrong adding edge format: weighted!'
+                return
+            tempw = edge_tuple[2]
+            edge_tuple = edge_tuple[:2]
+            if not self.Directed:
+                if (edge_tuple in self.Edge) or ((edge_tuple[1], edge_tuple[0]) in self.Edge):
+                    print 'This edge already exist: weighted and undirected'
+                    return
+            else:
+                if edge_tuple in self.Edge:
+                    print 'This edge already exist: weighted and directed'
+                    return
+            self.Weight.append(tempw)
+        else:
+            if len(edge_tuple) != 2:
+                print 'Wrong adding edge format: unweighted!'
+                return
+            if not self.Directed:
+                if (edge_tuple in self.Edge) or ((edge_tuple[1], edge_tuple[0]) in self.Edge):
+                    print 'This edge already exist: unweighted and undirected'
+                    return
+            else:
+                if edge_tuple in self.Edge:
+                    print 'This edge already exist: unweighted and directed'
+                    return
         if edge_tuple[0] in self.Vertex and edge_tuple[1] in self.Vertex:
             self.Edge.append(edge_tuple)
         else:
@@ -80,11 +114,15 @@ class Graph(object):
         return
 
     def delete_edge(self, edge_tuple):
-        if edge_tuple in self.Edge:
-            self.Edge.remove(edge_tuple)
+        """edge_tuple should be a 2-component tuple"""
+        if self.Weighted:
+            pass
+        else:
+            if edge_tuple in self.Edge:
+                self.Edge.remove(edge_tuple)
+                return
+            print 'This edge does not exist'
             return
-        print 'This edge does not exist'
-        return
 
     def delete_vertex(self, num_v):
         new_edge = []
