@@ -62,15 +62,27 @@ class Graph(object):
             return "Vertices: %s\nEdges: %s\nWeights: %s" % (self.Vertex.__str__(), self.Edge.__str__(), self.Weight.__str__())
         return "Vertices: %s\nEdges: %s" % (self.Vertex.__str__(), self.Edge.__str__())
 
+    def has_vertex(self, vertex):
+        return (vertex in self.Vertex)
+
     def add_vertex(self, num):
         if isinstance(num, list):
             print 'Wrong adding vertex format: list!'
             return
-        if num in self.Vertex:
+        if self.has_vertex(num):
             print 'This vertex already exist'
             return
         self.Vertex.append(num)
         return
+
+    def has_edge(self, edge_tuple):
+        if not isinstance(edge_tuple, tuple):
+            print 'Error find edge: not tuple!'
+            return False
+        if self.Directed:
+            return (edge_tuple in self.Edge)
+        #else: undirected
+        return ((edge_tuple in self.Edge) or ((edge_tuple[1], edge_tuple[0]) in self.Edge))
 
     def add_edge(self, edge_tuple):
         if not isinstance(edge_tuple, tuple):
@@ -85,33 +97,23 @@ class Graph(object):
                 return
             tempw = edge_tuple[2]
             edge_tuple = edge_tuple[:2]
-            if not self.Directed:
-                if (edge_tuple in self.Edge) or ((edge_tuple[1], edge_tuple[0]) in self.Edge):
-                    print 'This edge already exist: weighted and undirected'
-                    return
-            else:
-                if edge_tuple in self.Edge:
-                    print 'This edge already exist: weighted and directed'
-                    return
+            if self.has_edge(edge_tuple):
+                print 'This edge already exist: weighted'
+                return
             self.Weight.append(tempw)
-        else:
+        else:# unweighted
             if len(edge_tuple) != 2:
                 print 'Wrong adding edge format: unweighted!'
                 return
-            if not self.Directed:
-                if (edge_tuple in self.Edge) or ((edge_tuple[1], edge_tuple[0]) in self.Edge):
-                    print 'This edge already exist: unweighted and undirected'
-                    return
-            else:
-                if edge_tuple in self.Edge:
-                    print 'This edge already exist: unweighted and directed'
-                    return
-        if (edge_tuple[0] in self.Vertex) and (edge_tuple[1] in self.Vertex):
+            if self.has_edge(edge_tuple):
+                print 'This edge already exist: unweighted'
+                return
+        if self.has_vertex(edge_tuple[0]) and self.has_vertex(edge_tuple[1]):
             self.Edge.append(edge_tuple)
+            return
         else:
             print 'Wrong adding edge format: nonexisting vertex!'
             return
-        return
 
     def delete_edge(self, edge_tuple):
         """edge_tuple should be a 2-component tuple"""
@@ -141,15 +143,31 @@ class Graph(object):
                 return
 
     def delete_vertex(self, num_v):
-        if num_v in self.Vertex:
+        if self.has_vertex(num_v):
             selfedgecopy = self.Edge[:]
             self.Vertex.remove(num_v)
             for an_edge in selfedgecopy:
                 if num_v == an_edge[0] or num_v == an_edge[1]:
                     self.delete_edge(an_edge)
             return
+        #else: does not have this vertex
         print 'This vertex does not exist'
         return
+
+    def get_degree(self, vertex):
+        if not self.has_vertex(vertex):
+            print 'vertex does not exist'
+            return
+        #else: has vertex
+        if self.Directed:
+            print 'Not designed for'
+            return
+        #else: not directed
+        counter = 0
+        for each_edge in self.Edge:
+            if vertex in each_edge:
+                counter += 1
+        return counter
 
     def BFS(self, start):
         # Caution: no default value of start, must specify
@@ -200,26 +218,39 @@ class Graph(object):
                 if not test:
                     return test
             return test
+        #else:
         BFS_tree = self.BFS(self.Vertex[0])
         return len(BFS_tree) == num_vertex
 
-        # Depending on BFS
-    #def has_eulerian_cycle(self):
-        #result = True
-        #for 
+    def has_eulerian_cycle(self):
+        if not self.is_connected():
+            return False
+        #else: connected
+        if self.Directed:
+            print 'Not designed for'
+            return False
+        #else: connected
+        result = True
+        for each_vertex in self.Vertex:
+            result = result and (self.get_degree(each_vertex) % 2 == 0)
+        return result
 
+    #def print_eulerian_cycle(self):
+        #if has_eulerian_cycle(self):
 
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 #print mygraph
-mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
-print mygraph
+#mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
+#print mygraph
 #mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
 #print mygraph
 #mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
 #print mygraph
+mygraph = Graph(6, [(1, 2), (1, 4), (1, 6), (2, 3), (3, 4), (3, 6), (3, 1), (4, 5), (4, 6), (5, 6)])
 print mygraph.BFS(5)
 print mygraph.is_connected()
+print mygraph.has_eulerian_cycle()
 
 #mygraph.add_vertex(3)
 #print mygraph
