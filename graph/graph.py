@@ -1,5 +1,7 @@
 # Intend to do some graph algotithm in this module
 # Need first construct a class to represent a graph
+import copy
+import random
 
 class Graph(object):
     """
@@ -12,7 +14,7 @@ class Graph(object):
     Weighted: True for weighted graph, False for unweighted
     """
 
-    def __init__(self, vertex = 0, edge = list(), directed = False):
+    def __init__(self, vertex = 0, edge = None, directed = False):
         """vertex can be the number of vertices, assuming
         user don't really care the names of the vertices.
         Also vertex can be a list of vertex names.
@@ -24,7 +26,7 @@ class Graph(object):
         elif isinstance(vertex, list):
             self.Vertex = []
             for item in vertex:
-                self.add_vertex(item)
+                self = self.add_vertex(item)
         else:
             print 'Wrong vertex format!'
             return
@@ -35,6 +37,8 @@ class Graph(object):
             print 'Wrong directed format!'
             return
         # Do edge
+        if edge == None:
+            edge = []
         if isinstance(edge, list):
             edge_type = len(edge[0])
             for each_edge in edge:
@@ -51,10 +55,11 @@ class Graph(object):
                 return
             self.Edge = []
             for item in edge:
-                self.add_edge(item)
+                self = self.add_edge(item)
         else:
             print 'Wrong edge format: list!'
             return
+        print self
         return
 
     def __str__(self):
@@ -66,14 +71,16 @@ class Graph(object):
         return (vertex in self.Vertex)
 
     def add_vertex(self, num):
+        #functional, returning a new graph
         if isinstance(num, list):
             print 'Wrong adding vertex format: list!'
-            return
+            return self
         if self.has_vertex(num):
             print 'This vertex already exist'
-            return
-        self.Vertex.append(num)
-        return
+            return self
+        graph_copy = copy.deepcopy(self)
+        graph_copy.Vertex.append(num)
+        return graph_copy
 
     def has_edge(self, edge_tuple):
         if not isinstance(edge_tuple, tuple):
@@ -87,72 +94,75 @@ class Graph(object):
     def add_edge(self, edge_tuple):
         if not isinstance(edge_tuple, tuple):
             print 'Wrong adding edge format: not tuple!'
-            return
+            return self
         if edge_tuple[0] == edge_tuple[1]:
             print 'No loop in simple graph'
-            return
+            return self
+        graph_copy = copy.deepcopy(self)
         if self.Weighted:
             if len(edge_tuple) != 3:
                 print 'Wrong adding edge format: weighted!'
-                return
+                return self
             tempw = edge_tuple[2]
             edge_tuple = edge_tuple[:2]
             if self.has_edge(edge_tuple):
                 print 'This edge already exist: weighted'
-                return
-            self.Weight.append(tempw)
+                return self
+            graph_copy.Weight.append(tempw)
         else:# unweighted
             if len(edge_tuple) != 2:
                 print 'Wrong adding edge format: unweighted!'
-                return
+                return self
             if self.has_edge(edge_tuple):
                 print 'This edge already exist: unweighted'
-                return
+                return self
         if self.has_vertex(edge_tuple[0]) and self.has_vertex(edge_tuple[1]):
-            self.Edge.append(edge_tuple)
-            return
+            graph_copy.Edge.append(edge_tuple)
+            return graph_copy
         else:
             print 'Wrong adding edge format: nonexisting vertex!'
-            return
+            return self
 
     def delete_edge(self, edge_tuple):
         """edge_tuple should be a 2-component tuple"""
+        graph_copy = copy.deepcopy(self)
         if self.Weighted:
             if edge_tuple in self.Edge:
                 ind = self.Edge.index(edge_tuple)
-                del self.Weight[ind]
-                del self.Edge[ind]
-                return
+                del graph_copy.Weight[ind]
+                del graph_copy.Edge[ind]
+                return graph_copy
             elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
                 ind = self.Edge.index((edge_tuple[1], edge_tuple[0]))
-                del self.Weight[ind]
-                del self.Edge[ind]
-                return
+                del graph_copy.Weight[ind]
+                del graph_copy.Edge[ind]
+                return graph_copy
             else:
                 print 'Edge not found: weighted'
-                return
+                return self
         else:
             if edge_tuple in self.Edge:
-                self.Edge.remove(edge_tuple)
-                return
+                graph_copy.Edge.remove(edge_tuple)
+                return graph_copy
             elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
-                self.Edge.remove((edge_tuple[1], edge_tuple[0]))
-                return
+                graph_copy.Edge.remove((edge_tuple[1], edge_tuple[0]))
+                return graph_copy
             else:
                 print 'Edge not found: unweighted'
-                return
+                return self
 
     def delete_vertex(self, num_v):
+        graph_copy = copy.deepcopy(self)
         if self.has_vertex(num_v):
-            selfedgecopy = self.Edge[:]
-            self.Vertex.remove(num_v)
-            for an_edge in selfedgecopy:
+            #selfedgecopy = self.Edge[:]
+            graph_copy.Vertex.remove(num_v)
+            for an_edge in self.Edge:
                 if num_v == an_edge[0] or num_v == an_edge[1]:
-                    self.delete_edge(an_edge)
-            return
+                    graph_copy = graph_copy.delete_edge(an_edge)
+            return graph_copy
         #else: does not have this vertex
         print 'This vertex does not exist'
-        return
+        return self
 
     def get_degree(self, vertex):
         if not self.has_vertex(vertex):
@@ -235,8 +245,61 @@ class Graph(object):
             result = result and (self.get_degree(each_vertex) % 2 == 0)
         return result
 
-    #def print_eulerian_cycle(self):
-        #if has_eulerian_cycle(self):
+    def has_eulerian_path(self):
+        if not self.is_connected():
+            return False
+        #else: connected
+        if self.Directed:
+            print 'Not designed for'
+            return False
+        #else: connected
+        odd_counter = 0
+        for each_vertex in self.Vertex:
+            odd_counter += (self.get_degree(each_vertex) % 2)
+        return odd_counter == 2
+
+    def print_eulerian_cycle(self):
+        if not has_eulerian_cycle(self):
+            print 'No Eulerian cycle'
+            return
+        #else: has cycle
+        graph_copy = copy.deepcopy(self)
+        vertex_list = []
+
+    def random_cycle_list(self, start):
+        graph_copy = copy.deepcopy(self)
+        edge_set = []
+        if not self.has_vertex(start) or self.get_degree(start) < 2:
+            print 'start point error'
+            return edge_set
+        #else: start point good
+        v_from = start
+        v_to = None
+        while start != v_to:
+            v_to = random.choice(graph_copy.get_neighbor_set(v_from))
+            edge_set.append((v_from, v_to))
+            graph_copy = graph_copy.delete_edge((v_from, v_to))
+            v_from = v_to
+        return edge_set
+
+    def get_neighbor_set(self, vertex):
+        neighbor_set = []
+        if not self.has_vertex(vertex):
+            print 'No vertex, no edge'
+            return neighbor_set
+        #else:has vertex
+        if self.Directed:
+            for each_edge in self.Edge:
+                if vertex == each_edge[0]:
+                    neighbor_set.append(each_edge[1])
+        else:
+            for each_edge in self.Edge:
+                if vertex == each_edge[0]:
+                    neighbor_set.append(each_edge[1])
+                elif vertex == each_edge[1]:
+                    neighbor_set.append(each_edge[0])
+        return neighbor_set
+
 
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
@@ -248,9 +311,11 @@ class Graph(object):
 #mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
 #print mygraph
 mygraph = Graph(6, [(1, 2), (1, 4), (1, 6), (2, 3), (3, 4), (3, 6), (3, 1), (4, 5), (4, 6), (5, 6)])
+print mygraph
 print mygraph.BFS(5)
 print mygraph.is_connected()
 print mygraph.has_eulerian_cycle()
+print mygraph.random_cycle_list(5)
 
 #mygraph.add_vertex(3)
 #print mygraph
