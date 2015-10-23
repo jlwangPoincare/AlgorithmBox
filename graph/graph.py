@@ -26,7 +26,7 @@ class Graph(object):
         elif isinstance(vertex, list):
             self.Vertex = []
             for item in vertex:
-                self = self.add_vertex(item)
+                self._n_add_vertex(item)
         else:
             print 'Wrong vertex format!'
             return
@@ -55,11 +55,10 @@ class Graph(object):
                 return
             self.Edge = []
             for item in edge:
-                self = self.add_edge(item)
+                self._n_add_edge(item)
         else:
             print 'Wrong edge format: list!'
             return
-        print self
         return
 
     def __str__(self):
@@ -72,15 +71,33 @@ class Graph(object):
 
     def add_vertex(self, num):
         #functional, returning a new graph
+        try:
+            graph_new = self._n_add_vertex(num)
+            return graph_new
+        except:
+            print 'Error'
+            return self
+        #if isinstance(num, list):
+            #print 'Wrong adding vertex format: list!'
+            #return self
+        #if self.has_vertex(num):
+            #print 'This vertex already exist'
+            #return self
+        #graph_copy = copy.deepcopy(self)
+        #if len(graph_copy.Vertex) > 0:
+            #print 'In deep copy during adding vertex, graph_copy.Vertex[0] is self.Vertex[0]? ', graph_copy.Vertex[0] is self.Vertex[0]
+            #print graph_copy.Vertex[0]
+            #print self.Vertex[0]
+        #graph_copy.Vertex.append(num)
+        #return graph_copy
+
+    def _n_add_vertex(self, num):
         if isinstance(num, list):
-            print 'Wrong adding vertex format: list!'
-            return self
+            raise FormatError('Wrong adding vertex format: list!')
         if self.has_vertex(num):
-            print 'This vertex already exist'
-            return self
-        graph_copy = copy.deepcopy(self)
-        graph_copy.Vertex.append(num)
-        return graph_copy
+            raise ExistenceError('This vertex already exist')
+        self.Vertex.append(num)
+        return
 
     def has_edge(self, edge_tuple):
         if not isinstance(edge_tuple, tuple):
@@ -92,36 +109,44 @@ class Graph(object):
         return ((edge_tuple in self.Edge) or ((edge_tuple[1], edge_tuple[0]) in self.Edge))
 
     def add_edge(self, edge_tuple):
+        #functional, returning a new graph
+        try:
+            graph_new = self._n_add_edge(edge_tuple)
+            return graph_new
+        except:
+            print 'Error'
+            return self
+
+    def _n_add_edge(self, edge_tuple):
         if not isinstance(edge_tuple, tuple):
-            print 'Wrong adding edge format: not tuple!'
-            return self
+            raise FormatError('Wrong adding edge format: not tuple!')
         if edge_tuple[0] == edge_tuple[1]:
-            print 'No loop in simple graph'
-            return self
-        graph_copy = copy.deepcopy(self)
+            raise LoopError('No loop in simple graph')
+        #graph_copy = copy.deepcopy(self)
+        #if len(graph_copy.Edge) > 0:
+            #print 'In deep copy during adding edge, graph_copy.Edge[0] is self.Edge[0]? ', graph_copy.Edge[0] is self.Edge[0]
+            #print graph_copy.Edge[0]
+            #print self.Edge[0]
         if self.Weighted:
             if len(edge_tuple) != 3:
-                print 'Wrong adding edge format: weighted!'
-                return self
+                raise FormatError('Wrong adding edge format: weighted!')
             tempw = edge_tuple[2]
             edge_tuple = edge_tuple[:2]
             if self.has_edge(edge_tuple):
-                print 'This edge already exist: weighted'
-                return self
-            graph_copy.Weight.append(tempw)
+                raise ExistenceError('This edge already exist: weighted')
+            self.Weight.append(tempw)
+            #graph_copy.Weight.append(tempw)
         else:# unweighted
             if len(edge_tuple) != 2:
-                print 'Wrong adding edge format: unweighted!'
-                return self
+                raise FormatError('Wrong adding edge format: unweighted!')
             if self.has_edge(edge_tuple):
-                print 'This edge already exist: unweighted'
-                return self
+                raise ExistenceError('This edge already exist: unweighted')
         if self.has_vertex(edge_tuple[0]) and self.has_vertex(edge_tuple[1]):
-            graph_copy.Edge.append(edge_tuple)
-            return graph_copy
+            self.Edge.append(edge_tuple)
+            #graph_copy.Edge.append(edge_tuple)
+            return
         else:
-            print 'Wrong adding edge format: nonexisting vertex!'
-            return self
+            raise ExistenceError('Wrong adding edge format: nonexisting vertex!')
 
     def delete_edge(self, edge_tuple):
         """edge_tuple should be a 2-component tuple"""
