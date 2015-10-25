@@ -77,19 +77,6 @@ class Graph(object):
         except:
             print 'Error'
             return self
-        #if isinstance(num, list):
-            #print 'Wrong adding vertex format: list!'
-            #return self
-        #if self.has_vertex(num):
-            #print 'This vertex already exist'
-            #return self
-        #graph_copy = copy.deepcopy(self)
-        #if len(graph_copy.Vertex) > 0:
-            #print 'In deep copy during adding vertex, graph_copy.Vertex[0] is self.Vertex[0]? ', graph_copy.Vertex[0] is self.Vertex[0]
-            #print graph_copy.Vertex[0]
-            #print self.Vertex[0]
-        #graph_copy.Vertex.append(num)
-        #return graph_copy
 
     def _n_add_vertex(self, num):
         if isinstance(num, list):
@@ -122,11 +109,6 @@ class Graph(object):
             raise FormatError('Wrong adding edge format: not tuple!')
         if edge_tuple[0] == edge_tuple[1]:
             raise LoopError('No loop in simple graph')
-        #graph_copy = copy.deepcopy(self)
-        #if len(graph_copy.Edge) > 0:
-            #print 'In deep copy during adding edge, graph_copy.Edge[0] is self.Edge[0]? ', graph_copy.Edge[0] is self.Edge[0]
-            #print graph_copy.Edge[0]
-            #print self.Edge[0]
         if self.Weighted:
             if len(edge_tuple) != 3:
                 raise FormatError('Wrong adding edge format: weighted!')
@@ -284,12 +266,29 @@ class Graph(object):
         return odd_counter == 2
 
     def print_eulerian_cycle(self):
-        if not has_eulerian_cycle(self):
+        if not self.has_eulerian_cycle():
             print 'No Eulerian cycle'
             return
         #else: has cycle
         graph_copy = copy.deepcopy(self)
-        vertex_list = []
+        edge_list = []
+        first_vertex = graph_copy.Vertex[0]
+        vertex_list = [first_vertex]
+        while len(graph_copy.Edge) > 0:
+            new_edge_list = graph_copy.random_cycle_list(first_vertex)
+            new_vertex_list = []
+            for edge_tuple in new_edge_list:
+                new_vertex_list.append(edge_tuple[1])
+                graph_copy = graph_copy.delete_edge(edge_tuple)
+            first_vertex_index = vertex_list.index(first_vertex)
+            vertex_list = vertex_list[:first_vertex_index + 1] + new_vertex_list + vertex_list[first_vertex_index + 1:]
+            edge_list = edge_list[:first_vertex_index] + new_edge_list + edge_list[first_vertex_index:]
+            for vertex in vertex_list:
+                if graph_copy.get_degree(vertex) > 0:
+                    first_vertex = vertex
+                    break
+        print vertex_list
+        print edge_list
 
     def random_cycle_list(self, start):
         graph_copy = copy.deepcopy(self)
@@ -340,7 +339,8 @@ print mygraph
 print mygraph.BFS(5)
 print mygraph.is_connected()
 print mygraph.has_eulerian_cycle()
-print mygraph.random_cycle_list(5)
+#print mygraph.random_cycle_list(5)
+mygraph.print_eulerian_cycle()
 
 #mygraph.add_vertex(3)
 #print mygraph
