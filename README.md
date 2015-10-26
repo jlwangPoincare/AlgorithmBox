@@ -8,6 +8,7 @@ Categories
 
 ### ex_euclid: An implementation of extended Euclidean algorithm
 *This module originally was designed for implementing RSA algorithm*
+
     ex_euclid.py A module containing several related functions
     ex_euclid.gcd() A function calculates the greatest common divisor
     ex_euclid.ex_euclid() A function of extended Euclidean algorithm, which calculates x and y enables ax + by = gcd(a,b)
