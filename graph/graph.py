@@ -72,7 +72,8 @@ class Graph(object):
     def add_vertex(self, num):
         #functional, returning a new graph
         try:
-            graph_new = self._n_add_vertex(num)
+            graph_new = copy.deepcopy(self)
+            graph_new = graph_new._n_add_vertex(num)
             return graph_new
         except:
             print 'Error'
@@ -98,7 +99,8 @@ class Graph(object):
     def add_edge(self, edge_tuple):
         #functional, returning a new graph
         try:
-            graph_new = self._n_add_edge(edge_tuple)
+            graph_new = copy.deepcopy(self)
+            graph_new = graph_new._n_add_edge(edge_tuple)
             return graph_new
         except:
             print 'Error'
@@ -265,7 +267,7 @@ class Graph(object):
             odd_counter += (self.get_degree(each_vertex) % 2)
         return odd_counter == 2
 
-    def print_eulerian_cycle(self):
+    def find_eulerian_cycle(self):
         if not self.has_eulerian_cycle():
             print 'No Eulerian cycle'
             return
@@ -287,8 +289,9 @@ class Graph(object):
                 if graph_copy.get_degree(vertex) > 0:
                     first_vertex = vertex
                     break
-        print vertex_list
-        print edge_list
+        #print vertex_list
+        #print edge_list
+        return edge_list
 
     def random_cycle_list(self, start):
         graph_copy = copy.deepcopy(self)
@@ -324,6 +327,25 @@ class Graph(object):
                     neighbor_set.append(each_edge[0])
         return neighbor_set
 
+    def find_eulerian_path(self):
+        if not self.has_eulerian_path():
+            print 'No Eulerian path'
+            return
+        #else: has path
+        new_edge = []
+        for vert in self.Vertex:
+            if self.get_degree(vert) % 2 == 1:
+                new_edge.append(vert)
+        new_edge = tuple(new_edge)
+        graph_mod = self.add_edge(new_edge)
+        cycle = graph_mod.find_eulerian_cycle()
+        try:
+            i = cycle.index(new_edge)
+        except:
+            i = cycle.index((new_edge[1], new_edge[0]))
+        return cycle[i+1:] + cycle[:i]
+
+
 
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
@@ -334,13 +356,16 @@ class Graph(object):
 #print mygraph
 #mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
 #print mygraph
-mygraph = Graph(6, [(1, 2), (1, 4), (1, 6), (2, 3), (3, 4), (3, 6), (3, 1), (4, 5), (4, 6), (5, 6)])
-print mygraph
+#mygraph = Graph(6, [(1, 2), (1, 4), (1, 6), (2, 3), (3, 4), (3, 6), (3, 1), (4, 5), (4, 6), (5, 6)])
+#print mygraph
+mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
 print mygraph.BFS(5)
 print mygraph.is_connected()
 print mygraph.has_eulerian_cycle()
 #print mygraph.random_cycle_list(5)
-mygraph.print_eulerian_cycle()
+print mygraph.find_eulerian_cycle()
+print mygraph.has_eulerian_path()
+print mygraph.find_eulerian_path()
 
 #mygraph.add_vertex(3)
 #print mygraph
