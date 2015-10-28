@@ -73,7 +73,7 @@ class Graph(object):
         #functional, returning a new graph
         try:
             graph_new = copy.deepcopy(self)
-            graph_new = graph_new._n_add_vertex(num)
+            graph_new._n_add_vertex(num)
             return graph_new
         except:
             print 'Error'
@@ -100,7 +100,7 @@ class Graph(object):
         #functional, returning a new graph
         try:
             graph_new = copy.deepcopy(self)
-            graph_new = graph_new._n_add_edge(edge_tuple)
+            graph_new._n_add_edge(edge_tuple)
             return graph_new
         except:
             print 'Error'
@@ -337,7 +337,9 @@ class Graph(object):
             if self.get_degree(vert) % 2 == 1:
                 new_edge.append(vert)
         new_edge = tuple(new_edge)
+        print new_edge
         graph_mod = self.add_edge(new_edge)
+        print graph_mod
         cycle = graph_mod.find_eulerian_cycle()
         try:
             i = cycle.index(new_edge)
