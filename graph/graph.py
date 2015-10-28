@@ -309,7 +309,10 @@ class Graph(object):
             v_from = v_to
         return edge_set
 
-    def get_neighbor_set(self, vertex):
+    def get_neighbor_set(self, in_vertex):
+        if isinstance(in_vertex, list):
+            pass
+
         neighbor_set = []
         if not self.has_vertex(vertex):
             print 'No vertex, no edge'
@@ -346,6 +349,14 @@ class Graph(object):
         except:
             i = cycle.index((new_edge[1], new_edge[0]))
         return cycle[i+1:] + cycle[:i]
+
+    #def prim(self):
+        #vertex_list = []
+        #edge_list = []
+        #vertex_list = random.choice(self.Vertex)
+
+        #pass
+        #return
 
 
 
