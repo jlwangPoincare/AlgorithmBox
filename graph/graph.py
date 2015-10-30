@@ -352,6 +352,13 @@ class Graph(object):
             i = cycle.index((new_edge[1], new_edge[0]))
         return cycle[i+1:] + cycle[:i]
 
+    def get_weight(self, edge):
+        if not self.has_edge(edge):
+            print 'no weight without edge'
+            return None
+        index = self.Edge.index(edge)
+        return self.Weight[index]
+
     #def prim(self):
         #if not self.Weighted:
             #print 'Graph not weighted'
@@ -369,22 +376,23 @@ class Graph(object):
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 #print mygraph
-#mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
-#print mygraph
+mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
+print mygraph
 #mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
 #print mygraph
 #mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
 #print mygraph
 #mygraph = Graph(6, [(1, 2), (1, 4), (1, 6), (2, 3), (3, 4), (3, 6), (3, 1), (4, 5), (4, 6), (5, 6)])
 #print mygraph
-mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
-print mygraph.BFS(5)
+#mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
+#print mygraph.BFS(5)
 print mygraph.is_connected()
-print mygraph.has_eulerian_cycle()
+print mygraph.get_weight((5, 4))
+#print mygraph.has_eulerian_cycle()
 #print mygraph.random_cycle_list(5)
-print mygraph.find_eulerian_cycle()
-print mygraph.has_eulerian_path()
-print mygraph.find_eulerian_path()
+#print mygraph.find_eulerian_cycle()
+#print mygraph.has_eulerian_path()
+#print mygraph.find_eulerian_path()
 
 #mygraph.add_vertex(3)
 #print mygraph
