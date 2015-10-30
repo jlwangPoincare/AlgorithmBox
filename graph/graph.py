@@ -310,24 +310,28 @@ class Graph(object):
         return edge_set
 
     def get_neighbor_set(self, in_vertex):
-        if isinstance(in_vertex, list):
-            pass
-
-        neighbor_set = []
-        if not self.has_vertex(vertex):
-            print 'No vertex, no edge'
-            return neighbor_set
-        #else:has vertex
-        if self.Directed:
-            for each_edge in self.Edge:
-                if vertex == each_edge[0]:
-                    neighbor_set.append(each_edge[1])
+        if not isinstance(in_vertex, list):
+            #if not a list, make it a list
+            vertex_set = [in_vertex]
         else:
-            for each_edge in self.Edge:
-                if vertex == each_edge[0]:
-                    neighbor_set.append(each_edge[1])
-                elif vertex == each_edge[1]:
-                    neighbor_set.append(each_edge[0])
+            vertex_set = in_vertex[:]
+        neighbor_set = []
+        for vertex in vertex_set:
+            if not self.has_vertex(vertex):
+                print 'No vertex, no edge'
+                return neighbor_set
+        #else:has vertex
+        for vertex in vertex_set:
+            if self.Directed:
+                for each_edge in self.Edge:
+                    if vertex == each_edge[0] and each_edge[1] not in vertex_set:
+                        neighbor_set.append(each_edge[1])
+            else:
+                for each_edge in self.Edge:
+                    if vertex == each_edge[0] and each_edge[1] not in vertex_set:
+                        neighbor_set.append(each_edge[1])
+                    elif vertex == each_edge[1] and each_edge[0] not in vertex_set:
+                        neighbor_set.append(each_edge[0])
         return neighbor_set
 
     def find_eulerian_path(self):
@@ -340,9 +344,7 @@ class Graph(object):
             if self.get_degree(vert) % 2 == 1:
                 new_edge.append(vert)
         new_edge = tuple(new_edge)
-        print new_edge
         graph_mod = self.add_edge(new_edge)
-        print graph_mod
         cycle = graph_mod.find_eulerian_cycle()
         try:
             i = cycle.index(new_edge)
@@ -351,7 +353,11 @@ class Graph(object):
         return cycle[i+1:] + cycle[:i]
 
     #def prim(self):
+        #if not self.Weighted:
+            #print 'Graph not weighted'
+            #return None
         #vertex_list = []
+        #vertex_list.append(random.choice(self.Vertex)
         #edge_list = []
         #vertex_list = random.choice(self.Vertex)
 
