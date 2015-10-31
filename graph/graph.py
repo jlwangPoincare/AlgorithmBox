@@ -359,15 +359,48 @@ class Graph(object):
         index = self.Edge.index(edge)
         return self.Weight[index]
 
-    #def prim(self):
-        #if not self.Weighted:
-            #print 'Graph not weighted'
-            #return None
-        #vertex_list = []
-        #vertex_list.append(random.choice(self.Vertex)
-        #edge_list = []
-        #vertex_list = random.choice(self.Vertex)
+    #Mark
+    def get_edge_from(self, in_vertex):
+        if not isinstance(in_vertex, list):
+            #if not a list, make it a list
+            vertex_set = [in_vertex]
+        else:
+            vertex_set = in_vertex[:]
+        neighbor_set = []
+        for vertex in vertex_set:
+            if not self.has_vertex(vertex):
+                print 'No vertex, no edge'
+                return neighbor_set
+        #else:has vertex
+        for vertex in vertex_set:
+            if self.Directed:
+                for each_edge in self.Edge:
+                    if vertex == each_edge[0] and each_edge[1] not in vertex_set:
+                        neighbor_set.append(each_edge[1])
+            else:
+                for each_edge in self.Edge:
+                    if vertex == each_edge[0] and each_edge[1] not in vertex_set:
+                        neighbor_set.append(each_edge[1])
+                    elif vertex == each_edge[1] and each_edge[0] not in vertex_set:
+                        neighbor_set.append(each_edge[0])
+        return neighbor_set
 
+    #Mark
+    def prim(self):
+        if not self.Weighted:
+            print 'Graph not weighted'
+            return None
+        vertex_found = []
+        vertex_found.append(random.choice(self.Vertex))
+        edge_waiting = set()
+        edge_waiting |= self.get_edge_from(vertex_found)
+        MST = []
+        while len(edge_queue) > 0:
+            max_weight = 0
+            for edge in edge_waiting:
+                if self.Weight[self.Edge.index(edge)]:
+            get_least_weight_edge()
+            MST.append()
         #pass
         #return
 
