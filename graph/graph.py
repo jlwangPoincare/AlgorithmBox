@@ -356,7 +356,10 @@ class Graph(object):
         if not self.has_edge(edge):
             print 'no weight without edge'
             return None
-        index = self.Edge.index(edge)
+        try:
+            index = self.Edge.index(edge)
+        except:
+            index = self.Edge.index((edge[1], edge[0]))
         return self.Weight[index]
 
     #Mark
@@ -366,24 +369,18 @@ class Graph(object):
             vertex_set = [in_vertex]
         else:
             vertex_set = in_vertex[:]
-        neighbor_set = []
+        edge_from_set = []
         for vertex in vertex_set:
             if not self.has_vertex(vertex):
-                print 'No vertex, no edge'
-                return neighbor_set
+                print 'No vertex, no edge set'
+                return edge_from_set
         #else:has vertex
         for vertex in vertex_set:
-            if self.Directed:
-                for each_edge in self.Edge:
-                    if vertex == each_edge[0] and each_edge[1] not in vertex_set:
-                        neighbor_set.append(each_edge[1])
-            else:
-                for each_edge in self.Edge:
-                    if vertex == each_edge[0] and each_edge[1] not in vertex_set:
-                        neighbor_set.append(each_edge[1])
-                    elif vertex == each_edge[1] and each_edge[0] not in vertex_set:
-                        neighbor_set.append(each_edge[0])
-        return neighbor_set
+            neighbors = self.get_neighbor_set(vertex)
+            for another_vertex in neighbors:
+                if another_vertex not in vertex_set:
+                    edge_from_set.append((vertex, another_vertex))
+        return edge_from_set
 
     #Mark
     def prim(self):
@@ -394,22 +391,30 @@ class Graph(object):
         vertex_found.append(random.choice(self.Vertex))
         edge_waiting = set()
         edge_waiting |= self.get_edge_from(vertex_found)
+        #MST is a set of edges
         MST = []
-        while len(edge_queue) > 0:
-            max_weight = 0
+        while len(vertex_found) < len(self.Vertex):
+        #while len(edge_waiting) > 0:
+            min_weight = 2176284193
             for edge in edge_waiting:
-                if self.Weight[self.Edge.index(edge)]:
-            get_least_weight_edge()
-            MST.append()
-        #pass
-        #return
+                if self.get_weight(edge) < min_weight:
+                    min_weight = self.get_weight(edge)
+                    temp_edge = edge
+            #The edge with minimum weight is found
+            MST.append(edge)
+            edge_waiting.remove(edge)
+            vertex_found.append(edge[1])
+            edge_waiting |= self.get_edge_from(vertex_found)
+        return MST
 
 
 
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 #print mygraph
-mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
+#mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
+#print mygraph
+mygraph = Graph(5, [(1, 2, 1), (2, 3, 2), (3, 4, 3), (4, 5, 4), (5, 1, 5), (1, 3, 2), (2, 4, 3), (3, 5, 2), (4, 1, 3), (5, 2, 4)])
 print mygraph
 #mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
 #print mygraph
@@ -419,8 +424,10 @@ print mygraph
 #print mygraph
 #mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
 #print mygraph.BFS(5)
-print mygraph.is_connected()
-print mygraph.get_weight((5, 4))
+print "Is connected?", mygraph.is_connected()
+print "Weight of edge (5, 4)?", mygraph.get_weight((5, 4))
+print "Edges from vertices [3, 5]?", mygraph.get_edge_from([3, 5])
+print "Minimum spanning tree?", mygraph.prim()
 #print mygraph.has_eulerian_cycle()
 #print mygraph.random_cycle_list(5)
 #print mygraph.find_eulerian_cycle()
