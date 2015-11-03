@@ -389,8 +389,7 @@ class Graph(object):
             return None
         vertex_found = []
         vertex_found.append(random.choice(self.Vertex))
-        edge_waiting = set()
-        edge_waiting |= self.get_edge_from(vertex_found)
+        edge_waiting = self.get_edge_from(vertex_found)
         #MST is a set of edges
         MST = []
         while len(vertex_found) < len(self.Vertex):
@@ -401,10 +400,10 @@ class Graph(object):
                     min_weight = self.get_weight(edge)
                     temp_edge = edge
             #The edge with minimum weight is found
-            MST.append(edge)
-            edge_waiting.remove(edge)
-            vertex_found.append(edge[1])
-            edge_waiting |= self.get_edge_from(vertex_found)
+            MST.append(temp_edge)
+            edge_waiting.remove(temp_edge)
+            vertex_found.append(temp_edge[1])
+            edge_waiting = self.get_edge_from(vertex_found)
         return MST
 
 
