@@ -382,7 +382,6 @@ class Graph(object):
                     edge_from_set.append((vertex, another_vertex))
         return edge_from_set
 
-    #Mark
     def prim(self):
         if not self.Weighted:
             print 'Graph not weighted'
@@ -405,6 +404,10 @@ class Graph(object):
             vertex_found.append(temp_edge[1])
             edge_waiting = self.get_edge_from(vertex_found)
         return MST
+
+    def Dijkstra(self, start_vertex):
+        pass
+        return
 
 
 

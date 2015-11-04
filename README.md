@@ -20,10 +20,16 @@ Categories
     uquicksort.uqsort() A function taking a list as argument, returning the sorted list, with option of ascending or descending
 
 ### strmatch: Several algorithms for string search
-    strmatch.plain Plain string search
-    strmatch.kmp_search KMP string search algorithm, with good next array
-    strmatch.pre_process Function generating next array for KMP algorithm
+    strmatch.py A module containing functions for string search (or called substring matching)
+    strmatch.plain() Plain string search
+    strmatch.kmp_search() KMP string search algorithm, with good next array
+    strmatch.pre_process() Function generating next array for KMP algorithm
 
 ### prime_test
+    prime_test.py A module containing useful functions for Miller-Rabin primality testing algorithm
+    prime_test.prime_test() Miller-Rabin primality testing function, take an integer as input
+    prime_test.find_witness() Find the least witness (starting from 2) in Miller-Rabin algorithm of input
+    prime_test.fast_ind_mod_power() The fastest way to do integer power calculation (with mod n)
 
 ### graph
+    graph.py A class implementation of graph theory algorithms
