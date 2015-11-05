@@ -406,8 +406,31 @@ class Graph(object):
         return MST
 
     def Dijkstra(self, start_vertex):
-        pass
-        return
+        distance_record = []
+        vertex_found = []
+        #flag = []
+        i = 0
+        for vertex in self.Vertex:
+            if self.Vertex[i] == start_vertex:
+                distance_record.append(0)
+                vertex_found.append(vertex)
+                #flag[i] = True
+            else:
+                distance_record.append(2176284193)
+                #flag[i] = False
+            i += 1
+        #Initialization completed
+        while len(vertex_found) < len(self.Vertex):
+            edge_waiting = self.get_edge_from(vertex_found)
+            min_dist = 2176284193
+            for edge in edge_waiting:
+                if self.get_weight(edge) + distance_record[self.Vertex.index(edge[0])] < min_dist:
+                    min_dist = self.get_weight(edge) + distance_record[self.Vertex.index(edge[0])]
+                    temp_edge = edge
+            #The edge with minimum weight is found
+            vertex_found.append(temp_edge[1])
+            distance_record[self.Vertex.index(temp_edge[1])] = min_dist
+        return distance_record
 
 
 
@@ -430,6 +453,7 @@ print "Is connected?", mygraph.is_connected()
 print "Weight of edge (5, 4)?", mygraph.get_weight((5, 4))
 print "Edges from vertices [3, 5]?", mygraph.get_edge_from([3, 5])
 print "Minimum spanning tree?", mygraph.prim()
+print "Minimum distance?", mygraph.Dijkstra(5)
 #print mygraph.has_eulerian_cycle()
 #print mygraph.random_cycle_list(5)
 #print mygraph.find_eulerian_cycle()
