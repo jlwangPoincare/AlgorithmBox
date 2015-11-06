@@ -1,5 +1,3 @@
-# Intend to do some graph algotithm in this module
-# Need first construct a class to represent a graph
 import copy
 import random
 
@@ -14,7 +12,7 @@ class Graph(object):
     Weighted: True for weighted graph, False for unweighted
     """
 
-    def __init__(self, vertex = 0, edge = None, directed = False):
+    def __init__(self, vertex = 1, edge = None, directed = False):
         """vertex can be the number of vertices, assuming
         user don't really care the names of the vertices.
         Also vertex can be a list of vertex names.
@@ -39,7 +37,7 @@ class Graph(object):
         # Do edge
         if edge == None:
             edge = []
-        if isinstance(edge, list):
+        if isinstance(edge, list) and len(edge) > 0:
             edge_type = len(edge[0])
             for each_edge in edge:
                 if len(each_edge) != edge_type:
@@ -56,6 +54,9 @@ class Graph(object):
             self.Edge = []
             for item in edge:
                 self._n_add_edge(item)
+        elif isinstance(edge, list) and len(edge) == 0:
+            self.Edge = []
+            self.Weighted = False
         else:
             print 'Wrong edge format: list!'
             return
@@ -135,30 +136,18 @@ class Graph(object):
     def delete_edge(self, edge_tuple):
         """edge_tuple should be a 2-component tuple"""
         graph_copy = copy.deepcopy(self)
-        if self.Weighted:
-            if edge_tuple in self.Edge:
-                ind = self.Edge.index(edge_tuple)
-                del graph_copy.Weight[ind]
-                del graph_copy.Edge[ind]
-                return graph_copy
-            elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
-                ind = self.Edge.index((edge_tuple[1], edge_tuple[0]))
-                del graph_copy.Weight[ind]
-                del graph_copy.Edge[ind]
-                return graph_copy
-            else:
-                print 'Edge not found: weighted'
-                return self
+        if edge_tuple in self.Edge:
+            ind = self.Edge.index(edge_tuple)
+            graph_copy.Edge.remove(edge_tuple)
+        elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
+            ind = self.Edge.index((edge_tuple[1], edge_tuple[0]))
+            graph_copy.Edge.remove((edge_tuple[1], edge_tuple[0]))
         else:
-            if edge_tuple in self.Edge:
-                graph_copy.Edge.remove(edge_tuple)
-                return graph_copy
-            elif not self.Directed and ((edge_tuple[1], edge_tuple[0]) in self.Edge):
-                graph_copy.Edge.remove((edge_tuple[1], edge_tuple[0]))
-                return graph_copy
-            else:
-                print 'Edge not found: unweighted'
-                return self
+            print 'Edge not found'
+            return self
+        if self.Weighted:
+            del graph_copy.Weight[ind]
+        return graph_copy
 
     def delete_vertex(self, num_v):
         graph_copy = copy.deepcopy(self)
@@ -362,7 +351,6 @@ class Graph(object):
             index = self.Edge.index((edge[1], edge[0]))
         return self.Weight[index]
 
-    #Mark
     def get_edge_from(self, in_vertex):
         if not isinstance(in_vertex, list):
             #if not a list, make it a list
@@ -434,13 +422,14 @@ class Graph(object):
 
 
 
+if __name__ == '__main__':
 
 #mygraph = Graph(3, [(1, 2), (2, 3), (1, 3)])
 #print mygraph
 #mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
 #print mygraph
-mygraph = Graph(5, [(1, 2, 1), (2, 3, 2), (3, 4, 3), (4, 5, 4), (5, 1, 5), (1, 3, 2), (2, 4, 3), (3, 5, 2), (4, 1, 3), (5, 2, 4)])
-print mygraph
+    mygraph = Graph(5, [(1, 2, 1), (2, 3, 2), (3, 4, 3), (4, 5, 4), (5, 1, 5), (1, 3, 2), (2, 4, 3), (3, 5, 2), (4, 1, 3), (5, 2, 4)])
+    print mygraph
 #mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
 #print mygraph
 #mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
@@ -449,11 +438,11 @@ print mygraph
 #print mygraph
 #mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
 #print mygraph.BFS(5)
-print "Is connected?", mygraph.is_connected()
-print "Weight of edge (5, 4)?", mygraph.get_weight((5, 4))
-print "Edges from vertices [3, 5]?", mygraph.get_edge_from([3, 5])
-print "Minimum spanning tree?", mygraph.prim()
-print "Minimum distance?", mygraph.Dijkstra(5)
+    print "Is connected?", mygraph.is_connected()
+    print "Weight of edge (5, 4)?", mygraph.get_weight((5, 4))
+    print "Edges from vertices [3, 5]?", mygraph.get_edge_from([3, 5])
+    print "Minimum spanning tree?", mygraph.prim()
+    print "Minimum distance?", mygraph.Dijkstra(5)
 #print mygraph.has_eulerian_cycle()
 #print mygraph.random_cycle_list(5)
 #print mygraph.find_eulerian_cycle()
