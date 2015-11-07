@@ -102,6 +102,10 @@ def kmp_search(instring, pattern):
     return -1
     # End while
 
+def bm_search(instring, pattern):
+    pass
+    return
+
 # In KMP algorithm, the index in instring can never decrease. Thus it is
 # convenient to use i to indicate the character to compare in instring.
 
