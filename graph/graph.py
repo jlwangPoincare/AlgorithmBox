@@ -216,6 +216,9 @@ class Graph(object):
                     uncolored_vertex.remove(anothervertex)
         return BFSresult
 
+#Mark
+    def DFS(self, start):
+
     def is_connected(self):
         num_vertex = len(self.Vertex)
         if self.Directed:
@@ -419,6 +422,9 @@ class Graph(object):
             vertex_found.append(temp_edge[1])
             distance_record[self.Vertex.index(temp_edge[1])] = min_dist
         return distance_record
+
+#Mark
+    #def strong_connected_component(self):
 
 
 
