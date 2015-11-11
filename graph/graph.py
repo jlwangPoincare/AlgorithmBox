@@ -218,6 +218,22 @@ class Graph(object):
 
 #Mark
     def DFS(self, start):
+        #need a queue, maybe also a stack
+        uncolored_vertex = self.Vertex[:]
+        unvisited_stack = []
+        DFSresult = []
+        def DFS_recur(root):
+            unvisited_stack.push(root)
+            neighbor_list = self.get_neighbor_set(root)
+            for v in neighbor_list:
+                if v not in uncolored_vertex:
+                    DFSresult.append()
+                    DFS_recur(v)
+        #while len(unvisited_stack) > 0:
+            #DFS_recur(unvisited_stack.pop())
+        DFS_recur(start)
+
+
 
     def is_connected(self):
         num_vertex = len(self.Vertex)
