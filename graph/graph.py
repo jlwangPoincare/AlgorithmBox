@@ -220,18 +220,24 @@ class Graph(object):
     def DFS(self, start):
         #need a queue, maybe also a stack
         uncolored_vertex = self.Vertex[:]
-        unvisited_stack = []
+        #visiting_stack = []
         DFSresult = []
+        #visiting_stack.append(start)
+        
         def DFS_recur(root):
-            unvisited_stack.push(root)
+            #visiting_stack.append(root)
+            DFSresult.append(uncolored_vertex.pop(uncolored_vertex.index(root)))
+            print 'Adding to DFS result:', root
+            print 'Current DFS result:', DFSresult
             neighbor_list = self.get_neighbor_set(root)
             for v in neighbor_list:
-                if v not in uncolored_vertex:
-                    DFSresult.append()
+                if v in uncolored_vertex:
                     DFS_recur(v)
-        #while len(unvisited_stack) > 0:
-            #DFS_recur(unvisited_stack.pop())
+            #After the for loop
+            #visiting_stack.pop()
+
         DFS_recur(start)
+        return DFSresult
 
 
 
@@ -450,21 +456,22 @@ if __name__ == '__main__':
 #print mygraph
 #mygraph = Graph(5, [(1, 2, 1), (2, 1, 1), (2, 3, 2), (3, 2, 2), (3, 4, 3), (5, 4, 5), (5, 1, 2)], directed = True)
 #print mygraph
-    mygraph = Graph(5, [(1, 2, 1), (2, 3, 2), (3, 4, 3), (4, 5, 4), (5, 1, 5), (1, 3, 2), (2, 4, 3), (3, 5, 2), (4, 1, 3), (5, 2, 4)])
-    print mygraph
+#mygraph = Graph(5, [(1, 2, 1), (2, 3, 2), (3, 4, 3), (4, 5, 4), (5, 1, 5), (1, 3, 2), (2, 4, 3), (3, 5, 2), (4, 1, 3), (5, 2, 4)])
+#print mygraph
 #mygraph = Graph([1, 1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3)])
 #print mygraph
 #mygraph = Graph([1, 2, 3, 5, 8, 13], [(1, 2), (2, 3), (1, 3), (2, 13), (13, 8), (5, 1)])
 #print mygraph
 #mygraph = Graph(6, [(1, 2), (1, 4), (1, 6), (2, 3), (3, 4), (3, 6), (3, 1), (4, 5), (4, 6), (5, 6)])
 #print mygraph
-#mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
-#print mygraph.BFS(5)
-    print "Is connected?", mygraph.is_connected()
-    print "Weight of edge (5, 4)?", mygraph.get_weight((5, 4))
-    print "Edges from vertices [3, 5]?", mygraph.get_edge_from([3, 5])
-    print "Minimum spanning tree?", mygraph.prim()
-    print "Minimum distance?", mygraph.Dijkstra(5)
+    mygraph = Graph(6, [(1, 2), (2, 3), (3, 4), (4, 5), (2, 4), (2, 6), (6, 4)])
+    print mygraph
+    print mygraph.DFS(5)
+#print "Is connected?", mygraph.is_connected()
+#print "Weight of edge (5, 4)?", mygraph.get_weight((5, 4))
+#print "Edges from vertices [3, 5]?", mygraph.get_edge_from([3, 5])
+#print "Minimum spanning tree?", mygraph.prim()
+#print "Minimum distance?", mygraph.Dijkstra(5)
 #print mygraph.has_eulerian_cycle()
 #print mygraph.random_cycle_list(5)
 #print mygraph.find_eulerian_cycle()
