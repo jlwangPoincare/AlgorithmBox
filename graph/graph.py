@@ -216,25 +216,17 @@ class Graph(object):
                     uncolored_vertex.remove(anothervertex)
         return BFSresult
 
-#Mark
     def DFS(self, start):
         #need a queue, maybe also a stack
         uncolored_vertex = self.Vertex[:]
-        #visiting_stack = []
         DFSresult = []
-        #visiting_stack.append(start)
         
         def DFS_recur(root):
-            #visiting_stack.append(root)
             DFSresult.append(uncolored_vertex.pop(uncolored_vertex.index(root)))
-            print 'Adding to DFS result:', root
-            print 'Current DFS result:', DFSresult
             neighbor_list = self.get_neighbor_set(root)
             for v in neighbor_list:
                 if v in uncolored_vertex:
                     DFS_recur(v)
-            #After the for loop
-            #visiting_stack.pop()
 
         DFS_recur(start)
         return DFSresult
